@@ -48,7 +48,7 @@ df["sl_price"] = None
 df["tp_price"] = None
 df["filename"] = None   # optional, if you want to keep the frame path
 
-for idx, row in df[:1].iterrows():
+for idx, row in df.iterrows():
     trade_type = row["trade_action"]
     sl = row["sl"]
     tp = row["tp"]

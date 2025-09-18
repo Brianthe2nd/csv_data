@@ -6,6 +6,7 @@ import cv2
 import re 
 import json
 # from mt5_functions import map_pairs
+import subprocess
 
 def build_trade_prompt(trade_data: list) -> tuple:
     """
@@ -89,40 +90,45 @@ def ndarray_to_pil(img_array):
         raise ValueError("Unsupported ndarray shape for image.")
 
 
-
+API_KEY = "AIzaSyCrRumsDJLndwP3jQ9vxoY447Az3StMjmo"
 
 def get_levels(image, trade_data):
-    
-    API_KEY = "AIzaSyCrRumsDJLndwP3jQ9vxoY447Az3StMjmo"
     genai.configure(api_key=API_KEY)
     print("trade data in get levels")
-    if type(trade_data) != list:
-        trads=[]
-        trads.append(trade_data)
-        trade_data = trads
-    
+
+    if not isinstance(trade_data, list):
+        trade_data = [trade_data]
+
     prompt = build_trade_prompt(trade_data)
-    print(prompt)
+
     model = genai.GenerativeModel('gemini-2.5-flash-lite-preview-06-17')
-    # with open(image_path, 'rb') as img_file:
-    #     image_bytes = img_file.read()
-    # # Load the image
-    # img = Image.open(image_path)
+
+    # Convert image to PIL if needed
     img = ndarray_to_pil(image)
     contents = [prompt, img]
 
-    # Count tokens
-    tokens_info = model.count_tokens(contents)
-    print(f"🔢 Estimated tokens in request: {tokens_info.total_tokens}")
+    try:
+        # Count tokens
+        tokens_info = model.count_tokens(contents)
+        print(f"🔢 Estimated tokens in request: {tokens_info.total_tokens}")
 
-    # Send image and prompt together
-    response = model.generate_content(
-        [prompt, img],
-        generation_config={
-            "temperature": 0.3
-        }
-    )
-    return response.text
+        # Send image and prompt together
+        response = model.generate_content(
+            [prompt, img],
+            generation_config={"temperature": 0.3}
+        )
+        return response.text
+
+    except Exception as e:
+        error_msg = str(e).lower()
+        print(f"⚠️ Error in get_levels: {e}")
+
+        # Detect request/usage limits
+        if "quota" in error_msg or "limit" in error_msg or "rate" in error_msg:
+            print("🚨 Request limit reached — shutting down instance...")
+            subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
+        else:
+            raise  # re-raise if it's another error
 
 def unmap_pair(pair):
     if pair == "BTCUSD":

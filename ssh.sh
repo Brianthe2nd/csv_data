@@ -90,8 +90,13 @@ sudo yum install -y python3 python3-virtualenv
 echo "installing GL lib"
 sudo yum install -y mesa-libGL
 
-
-
+# echo installing ffmpeg and making it globally available
+# wget -O ffmpeg.tar.xz https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz
+# tar xvf ffmpeg.tar.xz
+# cd ffmpeg-git-20240629-amd64-static
+# sudo mv ffmpeg /usr/bin
+# cd ..
+# cd "$REPO_NAME"
 echo "Creating Python virtual environment..."
 python3 -m venv .venv
 source .venv/bin/activate
