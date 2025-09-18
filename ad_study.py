@@ -5,6 +5,7 @@ import uuid
 import cv2
 import os
 import json
+import traceback
 
 
 # df = pd.read_csv("trades.csv")
@@ -49,36 +50,40 @@ df["tp_price"] = None
 df["filename"] = None   # optional, if you want to keep the frame path
 
 for idx, row in df.iterrows():
-    trade_type = row["trade_action"]
-    sl = row["sl"]
-    tp = row["tp"]
-    status = row["status"]
+    try:
+        trade_type = row["trade_action"]
+        sl = row["sl"]
+        tp = row["tp"]
+        status = row["status"]
 
-    trade_data = {"trade_type": trade_type, "status": status, "sl": sl, "tp": tp}
+        trade_data = {"trade_type": trade_type, "status": status, "sl": sl, "tp": tp}
 
-    # Get frame (assume your get_frame returns a path to saved image)
-    image = get_frame(row["link"],cookies_file="b159.txt")
-    filename = f"{uuid.uuid4().hex}"
-    os.makedirs("images", exist_ok=True)
-    cv2.imwrite(os.path.join("images",filename+".png"), image)
-    
+        # Get frame (assume your get_frame returns a path to saved image)
+        image = get_frame(row["link"],cookies_file="b159.txt")
+        filename = f"{uuid.uuid4().hex}"
+        os.makedirs("images", exist_ok=True)
+        cv2.imwrite(os.path.join("images",filename+".png"), image)
+        
 
-    # Get AI levels (you had a typo: pass trade_data, not trade_type)
-    trade_levels = get_levels(trade_data=trade_data,image=image)
-    print(trade_levels)
-    json_obj = clean_ai_response(trade_levels)
-    print("\n")
-    print(json_obj)
-    # pair_name = json.loads(json_obj)["pair_name"]
-    # print(trade_levels)
-    trade_levels = json.loads(json_obj)
+        # Get AI levels (you had a typo: pass trade_data, not trade_type)
+        trade_levels = get_levels(trade_data=trade_data,image=image)
+        print(trade_levels)
+        json_obj = clean_ai_response(trade_levels)
+        print("\n")
+        print(json_obj)
+        # pair_name = json.loads(json_obj)["pair_name"]
+        # print(trade_levels)
+        trade_levels = json.loads(json_obj)
 
-    # Write results back into the DataFrame
-    df.at[idx, "ai_pair"] = trade_levels.get("pair",None)
-    df.at[idx, "entry_price"] = trade_levels.get("entry_price",None)
-    df.at[idx, "sl_price"] = trade_levels.get("sl_price",None)
-    df.at[idx, "tp_price"] = trade_levels.get("tp_price",None)
-    df.at[idx, "filename"] = filename
-
+        # Write results back into the DataFrame
+        df.at[idx, "ai_pair"] = trade_levels.get("pair",None)
+        df.at[idx, "entry_price"] = trade_levels.get("entry_price",None)
+        df.at[idx, "sl_price"] = trade_levels.get("sl_price",None)
+        df.at[idx, "tp_price"] = trade_levels.get("tp_price",None)
+        df.at[idx, "filename"] = filename
+    except Exception as e:
+        print(e)
+        
+        traceback.print_exc()
 df.to_csv("backtest_results.csv", index=False)
     

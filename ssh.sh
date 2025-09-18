@@ -109,9 +109,9 @@ pip3 install -r requirements.txt
 
 # Run main.py in background
 echo "Running main.py in background..."
-# nohup .venv/bin/python ad_study.py > main.log 2>&1 &
+nohup .venv/bin/python ad_study.py > main.log 2>&1 &
 
 # .venv/bin/python driver.py
 
-.venv/bin/python ad_study.py
+# .venv/bin/python ad_study.py
 
