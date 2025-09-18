@@ -6,7 +6,7 @@ import cv2
 import os
 import json
 import traceback
-
+import time
 
 # df = pd.read_csv("trades.csv")
 
@@ -51,6 +51,7 @@ df["filename"] = None   # optional, if you want to keep the frame path
 
 for idx, row in df.iterrows():
     try:
+        time.sleep(5)
         trade_type = row["trade_action"]
         sl = row["sl"]
         tp = row["tp"]
