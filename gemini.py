@@ -126,9 +126,11 @@ def get_levels(image, trade_data):
         # Detect request/usage limits
         if "quota" in error_msg or "limit" in error_msg or "rate" in error_msg:
             print("🚨 Request limit reached — shutting down instance...")
-            subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
+            return False
         else:
+            
             raise  # re-raise if it's another error
+            
 
 def unmap_pair(pair):
     if pair == "BTCUSD":

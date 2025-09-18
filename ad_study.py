@@ -7,6 +7,7 @@ import os
 import json
 import traceback
 import time
+import subprocess
 
 # df = pd.read_csv("trades.csv")
 
@@ -49,6 +50,10 @@ df["sl_price"] = None
 df["tp_price"] = None
 df["filename"] = None   # optional, if you want to keep the frame path
 
+def shutdown():
+    subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
+
+
 for idx, row in df.iterrows():
     try:
         time.sleep(5)
@@ -68,6 +73,10 @@ for idx, row in df.iterrows():
 
         # Get AI levels (you had a typo: pass trade_data, not trade_type)
         trade_levels = get_levels(trade_data=trade_data,image=image)
+        if trade_levels == False:
+            df.to_csv("backtest_results.csv", index=False)
+            shutdown()
+            
         print(trade_levels)
         json_obj = clean_ai_response(trade_levels)
         print("\n")
