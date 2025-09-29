@@ -55,7 +55,8 @@ def shutdown():
 
 for idx, row in df.iterrows():
     try:
-        if pd.isna(row["filename"]) or row["filename"] == "":
+        val = row["filename"]
+        if pd.isna(val) or str(val).lower() == "nan" or val == "":
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
