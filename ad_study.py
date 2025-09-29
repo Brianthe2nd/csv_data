@@ -92,6 +92,10 @@ for idx, row in df.iterrows():
             df.at[idx, "sl_price"] = trade_levels.get("sl_price",None)
             df.at[idx, "tp_price"] = trade_levels.get("tp_price",None)
             df.at[idx, "filename"] = filename
+        else:
+            print("File name is: ")
+            print(row["filename"])
+            print("\n")
     except Exception as e:
         print(e)
         
