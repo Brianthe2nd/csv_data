@@ -53,10 +53,9 @@ df = pd.read_csv("backtest_results.csv")
 def shutdown():
     subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
 
-import numpy as np
 for idx, row in df.iterrows():
     try:
-        if row["filename"] == "nan":
+        if pd.isna(row["filename"]):
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
