@@ -64,7 +64,7 @@ def read_column_by_name(file_path, column_name):
 processed_rows = read_column_by_name("backtest_results.csv","link")
 for idx, row in df.iterrows():
     try:
-        if row["link"] in processed_rows:
+        if row["link"] not in processed_rows:
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
