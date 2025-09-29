@@ -37,34 +37,26 @@ import subprocess
 #     return df_cleaned
 
 
-df = pd.read_csv("filtered_trades.csv")
+df = pd.read_csv("backtest_results.csv")
 # print("we have : ",len(df)," trades")
 # df = clean_trades(df)
 # print("we have : ",len(df)," trades")
 
 
 # Make sure df has the new columns first
-df["ai_pair"] = None
-df["entry_price"] = None
-df["sl_price"] = None
-df["tp_price"] = None
-df["filename"] = None   # optional, if you want to keep the frame path
+# df["ai_pair"] = None
+# df["entry_price"] = None
+# df["sl_price"] = None
+# df["tp_price"] = None
+# df["filename"] = None   # optional, if you want to keep the frame path
 
 def shutdown():
     subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
 
-import pandas as pd
 
-def read_column_by_name(file_path, column_name):
-    df = pd.read_csv(file_path)
-    return df[column_name].to_numpy()  # returns a NumPy array
-
-# Example usage
-
-processed_rows = read_column_by_name("backtest_results.csv","link")
 for idx, row in df.iterrows():
     try:
-        if row["link"] not in processed_rows:
+        if row["filename"] == None :
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
