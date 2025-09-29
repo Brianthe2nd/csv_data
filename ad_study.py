@@ -37,7 +37,7 @@ import subprocess
 #     return df_cleaned
 
 
-df = pd.read_csv("backtest_results.csv")
+df = pd.read_csv("backtest_results.csv" ,keep_default_na=True, na_values=[""])
 # print("we have : ",len(df)," trades")
 # df = clean_trades(df)
 # print("we have : ",len(df)," trades")
@@ -55,7 +55,7 @@ def shutdown():
 
 for idx, row in df.iterrows():
     try:
-        if pd.isna(row["filename"]):
+        if row["filename"] == None:
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
