@@ -53,10 +53,18 @@ df["filename"] = None   # optional, if you want to keep the frame path
 def shutdown():
     subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
 
+import pandas as pd
 
+def read_column_by_name(file_path, column_name):
+    df = pd.read_csv(file_path)
+    return df[column_name].to_numpy()  # returns a NumPy array
+
+# Example usage
+
+processed_rows = read_column_by_name("backtest_results.csv","link")
 for idx, row in df.iterrows():
     try:
-        if row["filename"] == None:
+        if row["link"] in processed_rows:
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
