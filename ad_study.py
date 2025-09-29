@@ -56,7 +56,7 @@ def shutdown():
 
 for idx, row in df.iterrows():
     try:
-        if row["filename"] == None :
+        if row["filename"] == "":
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
