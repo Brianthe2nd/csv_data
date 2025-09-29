@@ -56,7 +56,7 @@ def shutdown():
 import numpy as np
 for idx, row in df.iterrows():
     try:
-        if row["filename"] == np.nan:
+        if row["filename"] == "nan":
             time.sleep(5)
             trade_type = row["trade_action"]
             sl = row["sl"]
