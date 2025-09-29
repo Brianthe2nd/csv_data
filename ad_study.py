@@ -14,7 +14,10 @@ df = pd.read_csv("backtest_results.csv")
 def shutdown():
     subprocess.run(["sudo", "shutdown", "-h", "now"], check=False)
 
-for idx, row in df.iterrows():
+mask = df["filename"].isna() | (df["filename"].astype(str).str.strip().str.lower().isin(["", "nan"]))
+df_to_process = df[mask]
+
+for idx, row in df_to_process.iterrows():
     try:
         val = row["filename"]
 
